@@ -14,7 +14,7 @@ for num,line in enumerate(lines):
     print(getoutput('git clone https://github.itu.dk/SWU-FYP-Spring2023/{}.git'.format(repo)))
     print(getoutput('cp -r /Users/nuli/BFST2023/fun.txt /Users/nuli/BFST2023/{}/.'.format(repo)))
     #print(getoutput('ls /Users/nuli/GitHubITU/{}/*'.format(repo)))
-    #print(getoutput('git add https://github.itu.dk/SWU-FYP-Spring2023/{}.git /Users/nuli/GitHubITU/BFST2023-teaching/{}'.format(repo,repo)))
+    print(getoutput('git submodule add https://github.itu.dk/SWU-FYP-Spring2023/{}.git /Users/nuli/BFST2023/{}'.format(repo,repo)))
     #print(getoutput('git commit -m "added a start project"'))
     #print(getoutput('git checkout -b Y'))
     #print(getoutput('git -C push -u origin Y'))

@@ -1,0 +1,6 @@
+[submodule "/Users/nuli/BFST2023/BFST23yala"]
+	path = /Users/nuli/BFST2023/BFST23yala
+	url = https://github.itu.dk/SWU-FYP-Spring2023/BFST23yala.git
+[submodule "/Users/nuli/BFST2023/BFST23nuli"]
+	path = /Users/nuli/BFST2023/BFST23nuli
+	url = https://github.itu.dk/SWU-FYP-Spring2023/BFST23nuli.git
