@@ -13,9 +13,10 @@ for num,line in enumerate(lines):
     repo = 'BFST23'+user
     print(repo)   
     print(getoutput('git remote set-url --add --push all https://github.itu.dk/SWU-FYP-Spring2023/{}.git'.format(repo)))       
-print(getoutput('git remote -v'))
-print(getoutput('git checkout -b branchX'))
-print(getoutput('git push fun.txt branchX'))
+    #print(getoutput('git remote -v'))
+    #print(getoutput('git add .'))
+    #print(getoutput('git checkout -b branchX'))
+    #print(getoutput('git push fun.txt branchX'))
     # THIS part of the code clones a remote repo, adds stuff to it, then commits the changes, checks out a new branch, 
     #and pushes the changes on a new branch. 
     #print(getoutput('git clone https://github.itu.dk/SWU-FYP-Spring2023/{}.git'.format(repo)))
