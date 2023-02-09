@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="bfst2023.handins.AppTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2023-02-07T13:04:42" hostname="NOERKLIT-PC" time="0.024">
-  <properties/>
-  <testcase name="simple()" classname="bfst2023.handins.AppTest" time="0.015"/>
-  <testcase name="appHasAGreeting()" classname="bfst2023.handins.AppTest" time="0.008"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
