@@ -18,9 +18,12 @@ import javafx.stage.Stage;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-<span class="nc" id="L21">        primaryStage.setTitle(&quot;Start Project&quot;);</span>
-<span class="nc" id="L22">        primaryStage.show();</span>
+<span class="nc" id="L21">        String filename = &quot;C:/Users/mchrn/ITU/First_Year_Project/BFST23macj/DrawLines_Zoom_Pan/app/data/lines86k.txt&quot;;</span>
+<span class="nc" id="L22">        var model = new Model(filename);</span>
+<span class="nc" id="L23">        var view = new View(model, primaryStage);</span>
+<span class="nc" id="L24">        var controller = new Controller(model, view);</span>
         
-<span class="nc" id="L24">    }</span>
+        
+<span class="nc" id="L27">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

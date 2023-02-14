@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>View.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">startproject</a> &gt; <span class="el_source">View.java</span></div><h1>View.java</h1><pre class="source lang-java linenums">package startproject;
+
+import javafx.scene.paint.Color;
+import java.util.Iterator;
+
+import javafx.geometry.Point2D;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.transform.Affine;
+import javafx.scene.transform.NonInvertibleTransformException;
+import javafx.stage.Stage;
+
+public class View {
+<span class="nc" id="L16">Canvas canvas = new Canvas(640,480);</span>
+<span class="nc" id="L17">GraphicsContext gc = canvas.getGraphicsContext2D();</span>
+<span class="nc" id="L18">double x1 = 100;</span>
+<span class="nc" id="L19">double y1 = 200;</span>
+<span class="nc" id="L20">double x2 = 200;</span>
+<span class="nc" id="L21">double y2 = 300;</span>
+
+<span class="nc" id="L23">Affine trans = new Affine();</span>
+
+Model model;
+<span class="nc" id="L26">    public View(Model model, Stage primaryStage) {</span>
+<span class="nc" id="L27">        this.model = model;</span>
+<span class="nc" id="L28">        primaryStage.setTitle(&quot;Draw Lines&quot;);</span>
+<span class="nc" id="L29">        BorderPane pane = new BorderPane(canvas);</span>
+<span class="nc" id="L30">        Scene scene = new Scene(pane);</span>
+<span class="nc" id="L31">        primaryStage.setScene(scene);</span>
+<span class="nc" id="L32">        primaryStage.show();</span>
+<span class="nc" id="L33">        zoom(100, 100, 0.5);</span>
+<span class="nc" id="L34">        pan(100,100);</span>
+        
+<span class="nc" id="L36">        }</span>
+        void redraw() {
+<span class="nc" id="L38">        Iterator it = model.lines.iterator();</span>
+<span class="nc" id="L39">        gc.setTransform(new Affine());</span>
+        
+<span class="nc" id="L41">        gc.setFill(Color.WHITE);</span>
+<span class="nc" id="L42">        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());</span>
+<span class="nc" id="L43">        gc.setTransform(trans);</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        while(it.hasNext()) {</span>
+<span class="nc" id="L45">            String fileline = (String) it.next();</span>
+<span class="nc" id="L46">            String[] coord = fileline.split(&quot; &quot;);</span>
+<span class="nc" id="L47">            double x1 = Double.parseDouble(coord[1]);</span>
+<span class="nc" id="L48">            double y1 = Double.parseDouble(coord[2]);</span>
+<span class="nc" id="L49">            double x2 = Double.parseDouble(coord[3]);</span>
+<span class="nc" id="L50">            double y2 = Double.parseDouble(coord[4]);</span>
+<span class="nc" id="L51">            gc.beginPath();</span>
+<span class="nc" id="L52">            gc.setLineWidth(0.2);</span>
+<span class="nc" id="L53">            gc.moveTo(x1, y1);</span>
+<span class="nc" id="L54">            gc.lineTo(x2, y2);</span>
+<span class="nc" id="L55">            gc.stroke();</span>
+<span class="nc" id="L56">        }</span>
+        
+<span class="nc" id="L58">    }</span>
+    void pan(double dx, double dy) {
+<span class="nc" id="L60">        trans.prependTranslation(dx,dy);</span>
+<span class="nc" id="L61">        redraw();</span>
+<span class="nc" id="L62">    }</span>
+    void zoom(double dx, double dy, double factor) {
+<span class="nc" id="L64">        pan(-dx, -dy);</span>
+<span class="nc" id="L65">        trans.prependScale(factor, factor);</span>
+<span class="nc" id="L66">        pan(dx,dy);</span>
+<span class="nc" id="L67">        redraw();</span>
+<span class="nc" id="L68">    }</span>
+    public Point2D mousetoModel(double lastX, double lastY) {
+        //String s = &quot;LINES&quot;.concat(&quot; &quot;).concat(lastmodel.getX()+&quot;&quot;).concat(&quot; &quot;);
+        try {
+<span class="nc" id="L72">            return trans.inverseTransform(lastX, lastY);</span>
+<span class="nc" id="L73">        } catch (NonInvertibleTransformException e) {</span>
+            // TODO Auto-generated catch block
+<span class="nc" id="L75">            throw new RuntimeException();</span>
+        }
+    }
+    
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -18,7 +18,7 @@ public class App extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        String filename = "C:/Users/mchrn/ITU/First_Year_Project/LiveCoding/startproject/app/data/lines86k.txt";
+        String filename = "C:/Users/mchrn/ITU/First_Year_Project/BFST23macj/DrawLines_Zoom_Pan/app/data/lines86k.txt";
         var model = new Model(filename);
         var view = new View(model, primaryStage);
         var controller = new Controller(model, view);
