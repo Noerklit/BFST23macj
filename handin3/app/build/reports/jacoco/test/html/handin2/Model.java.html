@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Model.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">handin2</a> &gt; <span class="el_source">Model.java</span></div><h1>Model.java</h1><pre class="source lang-java linenums">package handin2;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Scanner;
+import java.util.zip.ZipInputStream;
+
+import javax.xml.stream.FactoryConfigurationError;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+
+import javafx.geometry.Point2D;
+
+public class Model implements Serializable {
+<span class="nc" id="L29">    List&lt;Line&gt; lines = new ArrayList&lt;Line&gt;();</span>
+<span class="nc" id="L30">    List&lt;Way&gt; ways = new ArrayList&lt;Way&gt;();</span>
+
+    double minlat, maxlat, minlon, maxlon;
+
+    static Model load(String filename) throws FileNotFoundException, IOException, ClassNotFoundException, XMLStreamException, FactoryConfigurationError {
+<span class="nc bnc" id="L35" title="All 2 branches missed.">        if (filename.endsWith(&quot;.obj&quot;)) {</span>
+<span class="nc" id="L36">            try (var in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {</span>
+<span class="nc" id="L37">                return (Model) in.readObject();</span>
+            }
+        }
+<span class="nc" id="L40">        return new Model(filename);</span>
+    }
+    
+
+<span class="nc" id="L44">    public Model(String filename) throws XMLStreamException, FactoryConfigurationError, IOException {</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        if (filename.endsWith(&quot;.osm.zip&quot;)) {</span>
+<span class="nc" id="L46">            parseZIP(filename);</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        } else if (filename.endsWith(&quot;.osm&quot;)) {</span>
+<span class="nc" id="L48">            parseOSM(filename);</span>
+        } else {
+<span class="nc" id="L50">            parseTXT(filename);</span>
+        }
+<span class="nc" id="L52">        save(filename+&quot;.obj&quot;);</span>
+<span class="nc" id="L53">    }</span>
+
+    void save(String filename) throws FileNotFoundException, IOException {
+<span class="nc" id="L56">        try (var out = new ObjectOutputStream(new FileOutputStream(filename))) {</span>
+<span class="nc" id="L57">            out.writeObject(this);</span>
+        }
+<span class="nc" id="L59">    }</span>
+
+    private void parseZIP(String filename) throws IOException, XMLStreamException, FactoryConfigurationError {
+<span class="nc" id="L62">        var input = new ZipInputStream(new FileInputStream(filename));</span>
+<span class="nc" id="L63">        input.getNextEntry();</span>
+<span class="nc" id="L64">        parseOSM(input);</span>
+<span class="nc" id="L65">    }</span>
+
+    private void parseOSM(String filename) throws FileNotFoundException, XMLStreamException, FactoryConfigurationError {
+<span class="nc" id="L68">        parseOSM(new FileInputStream(filename));</span>
+<span class="nc" id="L69">    }</span>
+
+    private void parseOSM(InputStream inputStream) throws FileNotFoundException, XMLStreamException, FactoryConfigurationError {
+<span class="nc" id="L72">        var input = XMLInputFactory.newInstance().createXMLStreamReader(new InputStreamReader(inputStream));</span>
+<span class="nc" id="L73">        var id2node = new HashMap&lt;Long, Node&gt;();</span>
+<span class="nc" id="L74">        var way = new ArrayList&lt;Node&gt;();</span>
+<span class="nc" id="L75">        var coast = false;</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        while (input.hasNext()) {</span>
+<span class="nc" id="L77">            var tagKind = input.next();</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">            if (tagKind == XMLStreamConstants.START_ELEMENT) {</span>
+<span class="nc" id="L79">                var name = input.getLocalName();</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">                if (name == &quot;bounds&quot;) {</span>
+<span class="nc" id="L81">                    minlat = Double.parseDouble(input.getAttributeValue(null, &quot;minlat&quot;));</span>
+<span class="nc" id="L82">                    maxlat = Double.parseDouble(input.getAttributeValue(null, &quot;maxlat&quot;));</span>
+<span class="nc" id="L83">                    minlon = Double.parseDouble(input.getAttributeValue(null, &quot;minlon&quot;));</span>
+<span class="nc" id="L84">                    maxlon = Double.parseDouble(input.getAttributeValue(null, &quot;maxlon&quot;));</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">                } else if (name == &quot;node&quot;) {</span>
+<span class="nc" id="L86">                    var id = Long.parseLong(input.getAttributeValue(null, &quot;id&quot;));</span>
+<span class="nc" id="L87">                    var lat = Double.parseDouble(input.getAttributeValue(null, &quot;lat&quot;));</span>
+<span class="nc" id="L88">                    var lon = Double.parseDouble(input.getAttributeValue(null, &quot;lon&quot;));</span>
+<span class="nc" id="L89">                    id2node.put(id, new Node(lat, lon));</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">                } else if (name == &quot;way&quot;) {</span>
+<span class="nc" id="L91">                    way.clear();</span>
+<span class="nc" id="L92">                    coast = false;</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">                } else if (name == &quot;tag&quot;) {</span>
+<span class="nc" id="L94">                    var v = input.getAttributeValue(null, &quot;v&quot;);</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">                    if (v.equals(&quot;coastline&quot;)) {</span>
+<span class="nc" id="L96">                        coast = true;</span>
+                    }
+<span class="nc bnc" id="L98" title="All 2 branches missed.">                } else if (name == &quot;nd&quot;) {</span>
+<span class="nc" id="L99">                    var ref = Long.parseLong(input.getAttributeValue(null, &quot;ref&quot;));</span>
+<span class="nc" id="L100">                    var node = id2node.get(ref);</span>
+<span class="nc" id="L101">                    way.add(node);</span>
+                }
+<span class="nc bnc" id="L103" title="All 2 branches missed.">            } else if (tagKind == XMLStreamConstants.END_ELEMENT) {</span>
+<span class="nc" id="L104">                var name = input.getLocalName();</span>
+<span class="nc bnc" id="L105" title="All 4 branches missed.">                if (name == &quot;way&quot; &amp;&amp; coast) {</span>
+<span class="nc" id="L106">                    ways.add(new Way(way));</span>
+                }
+            }
+<span class="nc" id="L109">        }</span>
+<span class="nc" id="L110">    }</span>
+
+    private void parseTXT(String filename) throws FileNotFoundException {
+<span class="nc" id="L113">        File f = new File(filename);</span>
+<span class="nc" id="L114">        try (Scanner s = new Scanner(f)) {</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">            while (s.hasNext()) {</span>
+<span class="nc" id="L116">                lines.add(new Line(s.nextLine()));</span>
+            }
+        }
+<span class="nc" id="L119">    }</span>
+
+    public void add(Point2D p1, Point2D p2) {
+<span class="nc" id="L122">        lines.add(new Line(p1, p2));</span>
+<span class="nc" id="L123">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
