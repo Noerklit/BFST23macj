@@ -13,7 +13,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        String filename = "C:/Users/mchrn/ITU/First_Year_Project/BFST23macj/OpenStreetMap-OSM/BFST23-main/app/data/Kastellet.osm.zip";
+        String filename = "C:/Users/mchrn/ITU/First_Year_Project/BFST23macj/OpenStreetMap-OSM-handin3/BFST23-main/app/data/Kastellet.osm.zip";
         // String filename = "data/small.osm.obj";
         var model = Model.load(filename);
         var view = new View(model, primaryStage);
